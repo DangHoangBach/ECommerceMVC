@@ -3,15 +3,15 @@
 @foreach (var item in Model)
 {
     <div class="col-md-6 col-lg-6 col-xl-4">
-        <div class="rounded position-relative fruite-item">
+        <div class="rounded position-relative fruite-item border border-secondary">
             <div class="fruite-img">
                 <a asp-action="Detail" asp-controller="HangHoa" asp-route-id="@item.MaHh"> 
-                <img src="~/Hinh/HangHoa/@item.Hinh" class="img-fluid w-100 rounded-top" alt="@item.TenHH">
+                    <img src="~/Hinh/HangHoa/@item.Hinh" class="img-fluid w-100 rounded-top" alt="@item.TenHH" style="max-width:306px;max-height:306px;min-width:306px;min-height:306px;">
                 </a>
             </div>
             <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">@item.TenLoai</div>
-            <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                <a asp-action="Detail" asp-controller="HangHoa" asp-route-id="@item.MaHh"> <h4>@item.TenHH</h4></a>
+            <div class="p-4  rounded-bottom">
+                <a asp-action="Detail" asp-controller="HangHoa" asp-route-id="@item.MaHh"> <h4 class="product-name">@item.TenHH</h4></a>
                 <p>@item.MoTaNgan</p>
                 <div class="d-flex justify-content-between flex-lg-wrap">
                     <p class="text-dark fs-5 fw-bold mb-0">$@item.DonGia</p>
@@ -21,3 +21,11 @@
         </div>
     </div>
 }
+<style>
+    .product-name {
+        width: 200px; /* Kích thước cố định */
+        overflow: hidden; /* Tránh tràn ra nếu tên sản phẩm quá dài */
+        white-space: nowrap; /* Ngăn ngừa các từ bị ngắt khi quá dài */
+        text-overflow: ellipsis; /* Hiển thị dấu ba chấm nếu tên sản phẩm quá dài */
+    }
+</style>
