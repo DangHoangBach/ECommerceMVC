@@ -1,7 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-
 namespace ECommerceMVC.Helpers
 {
     public static class DataEncryptionExtensions
@@ -43,4 +42,5 @@ namespace ECommerceMVC.Helpers
         #endregion
 
     }
+
 }

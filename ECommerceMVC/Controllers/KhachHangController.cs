@@ -38,7 +38,7 @@ namespace ECommerceMVC.Controllers
                     var khachHang = _mapper.Map<KhachHang>(model);
                     khachHang.RandomKey = MyUtil.GenerateRamdomKey();
                     khachHang.MatKhau = model.MatKhau.ToMd5Hash(khachHang.RandomKey);
-                    khachHang.HieuLuc = true;
+                    khachHang.HieuLuc = true;//sẽ xử lý khi dùng Mail để active
                     khachHang.VaiTro = 0;
 
                     if (Hinh != null)
@@ -74,8 +74,7 @@ namespace ECommerceMVC.Controllers
             ViewBag.ReturnUrl = ReturnUrl;
             if (ModelState.IsValid)
             {
-                var khachHang = db.KhachHangs.SingleOrDefault(kh => 
-                kh.MaKh == model.UserName);
+                var khachHang = db.KhachHangs.SingleOrDefault(kh => kh.MaKh == model.UserName);
                 if (khachHang == null)
                 {
                     ModelState.AddModelError("loi", "Không có khách hàng này");
@@ -97,7 +96,7 @@ namespace ECommerceMVC.Controllers
                             var claims = new List<Claim> {
                                 new Claim(ClaimTypes.Email, khachHang.Email),
                                 new Claim(ClaimTypes.Name, khachHang.HoTen),
-                                new Claim(MySetting.CLAIM_CUSTOMERID , khachHang.MaKh),
+                                new Claim(MySetting.CLAIM_CUSTOMERID, khachHang.MaKh),
 
 								//claim - role động
 								new Claim(ClaimTypes.Role, "Customer")
