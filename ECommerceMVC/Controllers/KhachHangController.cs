@@ -38,7 +38,7 @@ namespace ECommerceMVC.Controllers
                     var khachHang = _mapper.Map<KhachHang>(model);
                     khachHang.RandomKey = MyUtil.GenerateRamdomKey();
                     khachHang.MatKhau = model.MatKhau.ToMd5Hash(khachHang.RandomKey);
-                    khachHang.HieuLuc = true;//sẽ xử lý khi dùng Mail để active
+                    khachHang.HieuLuc = true;
                     khachHang.VaiTro = 0;
 
                     if (Hinh != null)

@@ -6,64 +6,66 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ECommerceMVC.Controllers
 {
-    public class CartController : Controller
-    {
-        private readonly Hshop2023Context db;
+	public class CartController : Controller
+	{
+		private readonly Hshop2023Context db;
 
-        public CartController(Hshop2023Context context) 
-        { 
-            db = context;
-        }
+		public CartController(Hshop2023Context context)
+		{
+			db = context;
+		}
 
-        public List<CartItem> Cart => HttpContext.Session.Get<List<CartItem>>(MySetting.CART_KEY) ?? new List<CartItem>();
-        public IActionResult Index()
-        {
-            return View(Cart);
-        }
+		public List<CartItem> Cart => HttpContext.Session.Get<List<CartItem>>(MySetting.CART_KEY) ?? new List<CartItem>();
 
-        public IActionResult AddToCart(int id, int quantity = 1)
-        {
-            var gioHang = Cart;
-            var item = gioHang.SingleOrDefault(p => p.MaHh == id);
-            if (item == null)
-            {
-                var hangHoa = db.HangHoas.SingleOrDefault(p => p.MaHh == id);
-                if(hangHoa == null)
-                {
-                    TempData["Message"] = $"Không tìm thấy hàng hóa có mã {id}";
-                    return Redirect("/404");
-                }
-                item = new CartItem
-                {
-                    MaHh = hangHoa.MaHh,
-                    TenHH = hangHoa.TenHh,
-                    DonGia = hangHoa.DonGia ?? 0,
-                    Hinh = hangHoa.Hinh ?? string.Empty,
-                    SoLuong = quantity
-                };
-                gioHang.Add(item);
-            }
-            else
-            {
-                item.SoLuong += quantity;
-            }
+		public IActionResult Index()
+		{
+			return View(Cart);
+		}
 
-            HttpContext.Session.Set(MySetting.CART_KEY, gioHang);
+		public IActionResult AddToCart(int id, int quantity = 1)
+		{
+			var gioHang = Cart;
+			var item = gioHang.SingleOrDefault(p => p.MaHh == id);
+			if (item == null)
+			{
+				var hangHoa = db.HangHoas.SingleOrDefault(p => p.MaHh == id);
+				if (hangHoa == null)
+				{
+					TempData["Message"] = $"Không tìm thấy hàng hóa có mã {id}";
+					return Redirect("/404");
+				}
+				item = new CartItem
+				{
+					MaHh = hangHoa.MaHh,
+					TenHH = hangHoa.TenHh,
+					DonGia = hangHoa.DonGia ?? 0,
+					Hinh = hangHoa.Hinh ?? string.Empty,
+					SoLuong = quantity
+				};
+				gioHang.Add(item);
+			}
+			else
+			{
+				item.SoLuong += quantity;
+			}
 
-            return RedirectToAction("Index");
-        }
+			HttpContext.Session.Set(MySetting.CART_KEY, gioHang);
 
-        public IActionResult RemoveCart(int id)
-        {
-            var gioHang = Cart;
-            var item = gioHang.SingleOrDefault(p => p.MaHh == id);
-            if(item != null)
-            {
-                gioHang.Remove(item);
-                HttpContext.Session.Set(MySetting.CART_KEY, gioHang);
-            }
-            return RedirectToAction("Index");
-        }
+			return RedirectToAction("Index");
+		}
+
+		public IActionResult RemoveCart(int id)
+		{
+			var gioHang = Cart;
+			var item = gioHang.SingleOrDefault(p => p.MaHh == id);
+			if (item != null)
+			{
+				gioHang.Remove(item);
+				HttpContext.Session.Set(MySetting.CART_KEY, gioHang);
+			}
+			return RedirectToAction("Index");
+		}
+
 		[Authorize]
 		[HttpGet]
 		public IActionResult Checkout()
@@ -104,14 +106,14 @@ namespace ECommerceMVC.Controllers
 
 				db.Database.BeginTransaction();
 				try
-				{
+				{					
 					db.Database.CommitTransaction();
 					db.Add(hoadon);
 					db.SaveChanges();
 
 					var cthds = new List<ChiTietHd>();
-					foreach (var item in Cart)
-					{
+                    foreach (var item in Cart)
+                    {
 						cthds.Add(new ChiTietHd
 						{
 							MaHd = hoadon.MaHd,
@@ -120,14 +122,14 @@ namespace ECommerceMVC.Controllers
 							MaHh = item.MaHh,
 							GiamGia = 0
 						});
-					}
+                    }
 					db.AddRange(cthds);
 					db.SaveChanges();
 
 					HttpContext.Session.Set<List<CartItem>>(MySetting.CART_KEY, new List<CartItem>());
 
 					return View("Success");
-				}
+                }
 				catch
 				{
 					db.Database.RollbackTransaction();
@@ -137,4 +139,4 @@ namespace ECommerceMVC.Controllers
 			return View(Cart);
 		}
 	}
-} 
+}
