@@ -42,6 +42,7 @@ namespace ECommerceMVC.Controllers
                     khachHang.VaiTro = 0;
 
                     if (Hinh != null)
+
                     {
                         khachHang.Hinh = MyUtil.UploadHinh(Hinh, "KhachHang");
                     }
